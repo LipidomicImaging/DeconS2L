@@ -9,6 +9,40 @@ from sklearn.metrics import r2_score, get_scorer
 from sklearn.linear_model import  Lasso, Ridge, LassoCV,LinearRegression ,ElasticNetCV
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 from sklearn.model_selection import  KFold, RepeatedKFold, GridSearchCV
+import pandas as pd
+import numpy as np
+import winreg
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import Lasso###导入lasso回归算法
+from sklearn.metrics import r2_score
+def get_sumarray(Forepre,Forefrag,index2,index):
+    
+    #[39,40,49,52,65,67,68,71,87,90,91]
+    A=(Forepre[:, higher:][:,index2])
+    B=Forefrag[:,index]
+    #print(B.shape)
+    sum_array_A =[]
+    sum_array_B =[]
+    for i in range(int(fore.shape[0]*0.3)):
+        how=(np.random.choice(np.arange(0,fore.shape[0],1),9)).astype(np.int)
+        sum_array_A.append(np.sum(A[how,:],axis=0)/9 )
+        sum_array_B.append(np.sum(B[how],axis=0)/9)
+    return np.array(sum_array_A),np.array(sum_array_B)
+def lasso_regression(data,test,predictor,pre_y,alpha):
+    lassoreg=Lasso(alpha=alpha,normalize=True,max_iter=1e5,fit_intercept=False)
+    lassoreg.fit(data[predictors],data[pre_y])
+    y_pred = lassoreg.predict(test[predictors])
+    ret = [alpha]
+    ret.append(r2_score(test[pre_y],y_pred)) #R方
+    ret.append(mean_absolute_error(test[pre_y],y_pred)) #平均绝对值误差
+    ret.extend(lassoreg.coef_) #模型系数
+    return ret,y_pred
+def norma(x):
+    return (x-np.min(x))/(np.max(x)-np.min(x))
+def norma1(x1):
+    return (x1)/np.sum(x1,axis=0)+0.00000001,np.sum(x1,axis=0)#((np.max(x1,axis=0)-np.min(x1,axis=0))+0.001),
+bin0=np.where(bin0<0,0,bin0)
+#lassoreg=Lasso(alpha=0.01,max_iter=19000,tol=0.00000000000000001,positive=True)
 lasso_alphas = np.linspace(0, 20, 2200)
 def get_lambda(a,b):
     '''lasso = Lasso() 
